@@ -17,6 +17,10 @@
         android:name="com.momentousmoss.tz_toolsid_client.ui.test_screen.TestFragment"
         android:label="testFragment"
         tools:layout="@layout/fragment_test">
+        <argument
+            android:name="token"
+            app:argType="string"
+            app:nullable="false" />
         <action
             android:id="@+id/action_testFragment_to_loginFragment"
             app:destination="@id/loginFragment" />

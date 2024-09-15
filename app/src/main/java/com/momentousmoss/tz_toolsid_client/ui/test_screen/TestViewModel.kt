@@ -17,16 +17,16 @@ class TestViewModel(private val testInterface: TestInterface? = null) : ViewMode
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
-    init {
-        dataLoading()
+    fun init(token: String) {
+        testLoading(token)
     }
 
-    private fun dataLoading() {
+    private fun testLoading(token: String) {
         _isLoading.value = true
         viewModelScope.launch {
-            testInterface?.testRequest("").let {
+            testInterface?.testRequest(token).let {
                 if (it != null) {
-
+                    //TODO
                 } else {
                     showToast.postValue(R.string.test_toast_error_request)
                 }

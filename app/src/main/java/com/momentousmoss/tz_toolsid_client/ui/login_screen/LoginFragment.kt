@@ -35,7 +35,7 @@ class LoginFragment : Fragment() {
         loginViewModel.apply {
             navigateToTestFragment.observe(viewLifecycleOwner) {
                 findNavController().navigate(
-                    LoginFragmentDirections.actionLoginFragmentToTestFragment()
+                    LoginFragmentDirections.actionLoginFragmentToTestFragment(it)
                 )
             }
             showToast.observe(viewLifecycleOwner) {

@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 
 class LoginViewModel(private val loginInterface: LoginInterface? = null) : ViewModel() {
 
-    val navigateToTestFragment = MutableSingleLiveEvent<Unit>()
+    val navigateToTestFragment = MutableSingleLiveEvent<String>()
     val showToast = MutableSingleLiveEvent<Int>()
 
     val email = MutableLiveData<String>()
@@ -36,8 +36,9 @@ class LoginViewModel(private val loginInterface: LoginInterface? = null) : ViewM
             val password = password.value
             if (email != null && password != null) {
                 loginInterface?.login(email, password).let {
-                    if (it?.token != null) {
-                        navigateToTestFragment.call()
+                    val token = it?.token ?: ""
+                    if (token.isNotEmpty()) {
+                        navigateToTestFragment.postValue(token)
                     } else {
                         showToast.postValue(R.string.login_toast_error_request)
                     }

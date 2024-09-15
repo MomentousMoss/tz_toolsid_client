@@ -18,6 +18,13 @@ class TestFragment : Fragment() {
     private val toastMessages by inject<ToastMessages>()
     private val testViewModel by viewModel<TestViewModel>()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            testViewModel.init(TestFragmentArgs.fromBundle(requireArguments()).token)
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

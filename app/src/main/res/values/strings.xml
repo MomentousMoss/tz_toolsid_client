@@ -7,5 +7,5 @@
     <string name="login_hint_password">Пароль</string>
 
     <string name="test_toast_error_request">Что-то пошло не так. Проверьте соединение с интернетом или попробуйте позже.</string>
-    <string name="test_button_logout">Логаут</string>
+    <string name="test_button_logout">Назад</string>
 </resources>
