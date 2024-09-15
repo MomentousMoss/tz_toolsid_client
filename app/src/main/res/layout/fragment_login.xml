@@ -40,7 +40,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="50dp"
-                    android:hint="Email">
+                    android:hint="@string/login_hint_email">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
@@ -51,11 +51,12 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="24dp"
-                    android:hint="Password"
+                    android:hint="@string/login_hint_password"
                     app:endIconMode="password_toggle">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -71,7 +72,7 @@
                     android:layout_width="match_parent"
                     android:layout_marginTop="24dp"
                     android:onClick="@{()->viewModel.loginClick()}"
-                    android:text="Логин" />
+                    android:text="@string/login_button_login" />
 
             </LinearLayout>
 

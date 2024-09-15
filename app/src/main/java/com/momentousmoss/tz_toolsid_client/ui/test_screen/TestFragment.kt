@@ -1,4 +1,4 @@
-package com.momentousmoss.tz_toolsid_client.ui.data_screen
+package com.momentousmoss.tz_toolsid_client.ui.test_screen
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,32 +8,38 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import com.momentousmoss.tz_toolsid_client.R
-import com.momentousmoss.tz_toolsid_client.databinding.FragmentDataBinding
+import com.momentousmoss.tz_toolsid_client.databinding.FragmentTestBinding
+import com.momentousmoss.tz_toolsid_client.utils.ToastMessages
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class DataFragment : Fragment() {
+class TestFragment : Fragment() {
 
-    private val dataViewModel by viewModel<DataViewModel>()
+    private val toastMessages by inject<ToastMessages>()
+    private val testViewModel by viewModel<TestViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val binding: FragmentDataBinding = DataBindingUtil.inflate(
+        val binding: FragmentTestBinding = DataBindingUtil.inflate(
             inflater,
-            R.layout.fragment_data,
+            R.layout.fragment_test,
             container,
             false
         )
         binding.apply {
-            viewModel = dataViewModel
+            viewModel = testViewModel
             lifecycleOwner = viewLifecycleOwner
         }
-        dataViewModel.apply {
+        testViewModel.apply {
             navigateToLoginFragment.observe(viewLifecycleOwner) {
                 findNavController().navigate(
-                    DataFragmentDirections.actionDataFragmentToLoginFragment()
+                    TestFragmentDirections.actionTestFragmentToLoginFragment()
                 )
+            }
+            showToast.observe(viewLifecycleOwner) {
+                toastMessages.showMessage(it)
             }
         }
         return binding.root

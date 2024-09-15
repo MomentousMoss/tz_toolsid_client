@@ -1,4 +1,4 @@
-package com.momentousmoss.tz_toolsid_client.utls
+package com.momentousmoss.tz_toolsid_client.utils
 
 import android.util.Log
 import androidx.annotation.MainThread

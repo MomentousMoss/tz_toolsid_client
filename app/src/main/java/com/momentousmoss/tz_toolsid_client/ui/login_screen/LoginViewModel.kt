@@ -4,12 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.momentousmoss.tz_toolsid_client.utls.MutableSingleLiveEvent
+import com.momentousmoss.tz_toolsid_client.R
+import com.momentousmoss.tz_toolsid_client.api.login.LoginInterface
+import com.momentousmoss.tz_toolsid_client.utils.MutableSingleLiveEvent
 import kotlinx.coroutines.launch
 
-class LoginViewModel : ViewModel() {
+class LoginViewModel(private val loginInterface: LoginInterface? = null) : ViewModel() {
 
-    val navigateToDataFragment = MutableSingleLiveEvent<Unit>()
+    val navigateToTestFragment = MutableSingleLiveEvent<Unit>()
+    val showToast = MutableSingleLiveEvent<Int>()
 
     val email = MutableLiveData<String>()
     val password = MutableLiveData<String>()
@@ -17,13 +20,31 @@ class LoginViewModel : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
+    init {
+        setDefaults()
+    }
+
+    private fun setDefaults() {
+        email.value = "atlassianfortest1@gmail.com"
+        password.value = "Test123Test"
+    }
+
     fun loginClick() {
         _isLoading.value = true
         viewModelScope.launch {
-            //login request
-            navigateToDataFragment.call()
+            val email = email.value
+            val password = password.value
+            if (email != null && password != null) {
+                loginInterface?.login(email, password).let {
+                    if (it?.token != null) {
+                        navigateToTestFragment.call()
+                    } else {
+                        showToast.postValue(R.string.login_toast_error_request)
+                    }
+                }
+            }
+            _isLoading.value = false
         }
-        _isLoading.value = false
     }
 
 }

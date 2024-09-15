@@ -59,4 +59,6 @@ dependencies {
 
     implementation(libs.koin.core)
     implementation(libs.koin.android)
+    implementation(libs.okhttp)
+    implementation(libs.gson)
 }
