@@ -12,6 +12,8 @@ import kotlinx.coroutines.launch
 class TestViewModel(private val testInterface: TestInterface? = null) : ViewModel() {
 
     val navigateToLoginFragment = MutableSingleLiveEvent<Unit>()
+    val blockUI = MutableSingleLiveEvent<Unit>()
+    val unblockUI = MutableSingleLiveEvent<Unit>()
     val showToast = MutableSingleLiveEvent<Int>()
 
     private val _isLoading = MutableLiveData<Boolean>()
@@ -27,6 +29,11 @@ class TestViewModel(private val testInterface: TestInterface? = null) : ViewMode
             testInterface?.testRequest(token).let {
                 if (it != null) {
                     //TODO
+                    if (true) {
+                        blockUI.call()
+                    } else {
+                        unblockUI.call()
+                    }
                 } else {
                     showToast.postValue(R.string.test_toast_error_request)
                 }
@@ -36,6 +43,7 @@ class TestViewModel(private val testInterface: TestInterface? = null) : ViewMode
     }
 
     fun logoutClick() {
+        unblockUI.call()
         navigateToLoginFragment.call()
     }
 
