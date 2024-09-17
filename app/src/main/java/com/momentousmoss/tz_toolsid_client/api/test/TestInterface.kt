@@ -4,5 +4,8 @@ import com.momentousmoss.tz_toolsid_client.api.JsonService
 
 interface TestInterface {
 
-    suspend fun testRequest(bearerToken : String): JsonService.TestData?
+    suspend fun testRequestDataResponse(bearerToken : String): JsonService.TestData?
+
+    suspend fun testRequestBlockResponse(bearerToken : String): Boolean?
+
 }

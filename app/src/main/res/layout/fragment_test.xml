@@ -71,7 +71,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:onClick="@{()->viewModel.logoutClick()}"
+            android:onClick="@{()->viewModel.logout()}"
             android:text="@string/test_button_logout" />
 
         <include

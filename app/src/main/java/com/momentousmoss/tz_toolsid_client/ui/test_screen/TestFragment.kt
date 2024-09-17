@@ -8,11 +8,17 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.activity.addCallback
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
+import com.momentousmoss.tz_toolsid_client.DELAY_JOB_CHECK_BLOCK
 import com.momentousmoss.tz_toolsid_client.R
+import com.momentousmoss.tz_toolsid_client.api.JsonService
 import com.momentousmoss.tz_toolsid_client.databinding.FragmentTestBinding
 import com.momentousmoss.tz_toolsid_client.utils.DPCManager
 import com.momentousmoss.tz_toolsid_client.utils.ToastMessages
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -21,6 +27,8 @@ class TestFragment : Fragment() {
     private val testViewModel by viewModel<TestViewModel>()
     private val toastMessages by inject<ToastMessages>()
     private val dpcManager by inject<DPCManager>()
+
+    private var checkBlockJob: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,41 +53,75 @@ class TestFragment : Fragment() {
             lifecycleOwner = viewLifecycleOwner
         }
         testViewModel.apply {
-            navigateToLoginFragment.observe(viewLifecycleOwner) {
-                findNavController().navigate(
-                    TestFragmentDirections.actionTestFragmentToLoginFragment()
-                )
-            }
-            showToast.observe(viewLifecycleOwner) {
-                toastMessages.showMessage(it)
-            }
-            blockUI.observe(viewLifecycleOwner) {
-                dpcManager.blockUI()
-            }
-            unblockUI.observe(viewLifecycleOwner) {
-                dpcManager.unblockUI { this@TestFragment.activity?.stopLockTask() }
+            logout.observe(viewLifecycleOwner) {
+                this@TestFragment.logout()
             }
             fillTestData.observe(viewLifecycleOwner) {
-                binding.apply {
-                    val user = it?.user
-                    if (user != null) {
-                        userName.apply {
-                            visibility = View.VISIBLE
-                            text = resources.getString(
-                                R.string.test_user_text, user.name, user.email
-                            )
-                        }
-                    }
-                    payloadList.apply {
-                        val listPayload = it?.qr?.payload
-                        if (!listPayload.isNullOrEmpty()) {
-                            adapter = PayloadListAdapter(listPayload)
-                        }
-                    }
-                }
+                fillUi(binding, it)
+            }
+            changeBlockUi.observe(viewLifecycleOwner) {
+                changeBlockUi(it)
+            }
+            showToast.observe(viewLifecycleOwner) {
+                showToast(it)
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {}
         return binding.root
+    }
+
+    private fun logout() {
+        if (!dpcManager.isLocked()) {
+            checkBlockJob?.cancel()
+            findNavController().navigate(
+                TestFragmentDirections.actionTestFragmentToLoginFragment()
+            )
+        }
+    }
+
+    private fun fillUi(binding: FragmentTestBinding, testData: JsonService.TestData?) {
+        binding.apply {
+            val user = testData?.user
+            if (user != null) {
+                userName.apply {
+                    visibility = View.VISIBLE
+                    text = resources.getString(
+                        R.string.test_user_text, user.name, user.email
+                    )
+                }
+            }
+            payloadList.apply {
+                val listPayload = testData?.qr?.payload
+                if (!listPayload.isNullOrEmpty()) {
+                    adapter = PayloadListAdapter(listPayload)
+                }
+            }
+        }
+    }
+
+    private fun changeBlockUi(isBlocked: Boolean?) {
+        if (isBlocked == null) {
+            showToast(R.string.test_toast_error_request)
+            testViewModel.logout()
+        } else {
+            if (isBlocked == true) blockUi() else unblockUI()
+            checkBlockJob?.cancel()
+            checkBlockJob = this.testViewModel.viewModelScope.launch {
+                delay(DELAY_JOB_CHECK_BLOCK)
+                testViewModel.checkBlock()
+            }
+        }
+    }
+
+    private fun blockUi() {
+        dpcManager.blockUI()
+    }
+
+    private fun unblockUI() {
+        dpcManager.unblockUI { this@TestFragment.activity?.stopLockTask() }
+    }
+
+    private fun showToast(messageResId: Int) {
+        toastMessages.showMessage(messageResId)
     }
 }

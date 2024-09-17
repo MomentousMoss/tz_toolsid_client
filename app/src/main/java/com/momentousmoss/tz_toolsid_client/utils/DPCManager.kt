@@ -37,7 +37,7 @@ class DPCManager(private val applicationContext: Context) {
         }
     }
 
-    private fun isLocked() = activityManager.lockTaskModeState == ActivityManager.LOCK_TASK_MODE_LOCKED
+    fun isLocked() = activityManager.lockTaskModeState == ActivityManager.LOCK_TASK_MODE_LOCKED
 
     private fun isDeviceOwnerApp() = devicePolicyManager.isDeviceOwnerApp(adminComponent.packageName)
 

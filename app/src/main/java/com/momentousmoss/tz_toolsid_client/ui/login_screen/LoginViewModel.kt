@@ -35,7 +35,7 @@ class LoginViewModel(private val loginInterface: LoginInterface? = null) : ViewM
             val email = email.value
             val password = password.value
             if (email != null && password != null) {
-                loginInterface?.login(email, password).let {
+                loginInterface?.loginRequestDataResponse(email, password).let {
                     val token = it?.token ?: ""
                     if (token.isNotEmpty()) {
                         navigateToTestFragment.postValue(token)

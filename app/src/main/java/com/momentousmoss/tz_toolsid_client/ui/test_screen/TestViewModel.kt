@@ -12,31 +12,29 @@ import kotlinx.coroutines.launch
 
 class TestViewModel(private val testInterface: TestInterface? = null) : ViewModel() {
 
-    val navigateToLoginFragment = MutableSingleLiveEvent<Unit>()
+    val logout = MutableSingleLiveEvent<Unit>()
 
     val showToast = MutableSingleLiveEvent<Int>()
-    val blockUI = MutableSingleLiveEvent<Unit>()
-    val unblockUI = MutableSingleLiveEvent<Unit>()
+    val changeBlockUi = MutableSingleLiveEvent<Boolean?>()
     val fillTestData = MutableSingleLiveEvent<JsonService.TestData?>()
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
+    private var token : String? = null
+
     fun init(token: String) {
+        this.token = token
         testLoading(token)
     }
 
     private fun testLoading(token: String) {
         _isLoading.value = true
         viewModelScope.launch {
-            testInterface?.testRequest(token).let {
+            testInterface?.testRequestDataResponse(token).let {
                 if (it != null) {
                     fillTestData.postValue(it)
-                    if (it.is_blocked == true) {
-                        blockUI.call()
-                    } else {
-                        unblockUI.call()
-                    }
+                    changeBlockUi.postValue(it.is_blocked)
                 } else {
                     showToast.postValue(R.string.test_toast_error_request)
                 }
@@ -45,9 +43,21 @@ class TestViewModel(private val testInterface: TestInterface? = null) : ViewMode
         }
     }
 
-    fun logoutClick() {
-        unblockUI.call()
-        navigateToLoginFragment.call()
+    fun checkBlock() {
+        viewModelScope.launch {
+            val token = this@TestViewModel.token
+            if (token == null) {
+                logout()
+            } else {
+                testInterface?.testRequestDataResponse(token).let {
+                    changeBlockUi.postValue(it?.is_blocked)
+                }
+            }
+        }
+    }
+
+    fun logout() {
+        logout.call()
     }
 
 }
