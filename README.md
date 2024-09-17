@@ -3,7 +3,7 @@
 **Затрачено:** ~ 24 часа
 ***
 **Release build:**
-[tz_toolsid_client/tz_toolsid_client.apk](https://github.com/MomentousMoss/tz_toolsid_client/blob/7ca722f3f550dbb0011abdc46fdaa2b4ed4977f0/tz_toolsid_client.apk)
+[tz_toolsid_client/tz_toolsid_client.apk](https://github.com/MomentousMoss/tz_toolsid_client/blob/main/tz_toolsid_client.apk)
 ***
 **Включение владельца:**
 
