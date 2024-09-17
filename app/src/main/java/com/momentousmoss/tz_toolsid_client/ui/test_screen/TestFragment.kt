@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.activity.addCallback
+import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
@@ -60,7 +61,7 @@ class TestFragment : Fragment() {
                 fillUi(binding, it)
             }
             changeBlockUi.observe(viewLifecycleOwner) {
-                changeBlockUi(it)
+                changeBlockUi(it, binding.blockedUiView)
             }
             showToast.observe(viewLifecycleOwner) {
                 showToast(it)
@@ -99,11 +100,12 @@ class TestFragment : Fragment() {
         }
     }
 
-    private fun changeBlockUi(isBlocked: Boolean?) {
+    private fun changeBlockUi(isBlocked: Boolean?, blockedUiView: AppCompatCheckBox) {
         if (isBlocked == null) {
             showToast(R.string.test_toast_error_request)
             testViewModel.logout()
         } else {
+            blockedUiView.isChecked = isBlocked
             if (isBlocked == true) blockUi() else unblockUI()
             checkBlockJob?.cancel()
             checkBlockJob = this.testViewModel.viewModelScope.launch {
