@@ -37,6 +37,7 @@ class TestViewModel(private val testInterface: TestInterface? = null) : ViewMode
                     changeBlockUi.postValue(it.is_blocked)
                 } else {
                     showToast.postValue(R.string.test_toast_error_request)
+                    logout()
                 }
             }
             _isLoading.value = false
@@ -47,6 +48,7 @@ class TestViewModel(private val testInterface: TestInterface? = null) : ViewMode
         viewModelScope.launch {
             val token = this@TestViewModel.token
             if (token == null) {
+                showToast.postValue(R.string.test_toast_error_broken_token)
                 logout()
             } else {
                 testInterface?.testRequestDataResponse(token).let {

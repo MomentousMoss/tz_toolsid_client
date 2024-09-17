@@ -49,7 +49,11 @@ class TestImplementation : MainApiImplementation(), TestInterface {
     }
 
     private fun getJson(jsonObject: JsonObject?): JsonService.Test? {
-        return Gson().fromJson(jsonObject, JsonService.Test::class.java)
+        return try {
+             Gson().fromJson(jsonObject, JsonService.Test::class.java)
+        } catch (e: Exception) {
+            null
+        }
     }
 
 }

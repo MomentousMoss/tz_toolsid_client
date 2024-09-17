@@ -48,7 +48,11 @@ class LoginImplementation : MainApiImplementation(), LoginInterface {
     }
 
     private fun getJson(jsonObject: JsonObject?): JsonService.Login? {
-        return Gson().fromJson(jsonObject, JsonService.Login::class.java)
+        return try {
+            Gson().fromJson(jsonObject, JsonService.Login::class.java)
+        } catch (e: Exception) {
+        null
+    }
     }
 
 }
