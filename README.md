@@ -1,9 +1,18 @@
 # tz_toolsid_client
 
-**Затрачено:** ~ часов
-
+**Затрачено:** ~ 23 часа
+***
 **Release build:**
+[tz_toolsid_client/tz_toolsid_client.apk](https://github.com/MomentousMoss/tz_toolsid_client/blob/7ca722f3f550dbb0011abdc46fdaa2b4ed4977f0/tz_toolsid_client.apk)
+***
+**Включение владельца:**
 
+adb shell dpm set-device-owner com.momentousmoss.tz_toolsid_client/.utils.DPCReceiver
+
+**Выключение:**
+
+adb shell dpm remove-active-admin com.momentousmoss.tz_toolsid_client/.utils.DPCReceiver
+***
 **Задание:**
 
 Создать/написать/разработать приложение (для планшета), которое будет состоять из 2х экранов, где первый экран имеет форму авторизации(поля):
