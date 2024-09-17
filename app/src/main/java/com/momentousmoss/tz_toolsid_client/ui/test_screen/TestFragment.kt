@@ -59,6 +59,25 @@ class TestFragment : Fragment() {
             unblockUI.observe(viewLifecycleOwner) {
                 dpcManager.unblockUI { this@TestFragment.activity?.stopLockTask() }
             }
+            fillTestData.observe(viewLifecycleOwner) {
+                binding.apply {
+                    val user = it?.user
+                    if (user != null) {
+                        userName.apply {
+                            visibility = View.VISIBLE
+                            text = resources.getString(
+                                R.string.test_user_text, user.name, user.email
+                            )
+                        }
+                    }
+                    payloadList.apply {
+                        val listPayload = it?.qr?.payload
+                        if (!listPayload.isNullOrEmpty()) {
+                            adapter = PayloadListAdapter(listPayload)
+                        }
+                    }
+                }
+            }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {}
         return binding.root
